@@ -1,0 +1,16 @@
+{
+  "name": "매일 Maeil — Learn Hangul",
+  "short_name": "Maeil",
+  "description": "A daily Hangul reader. Short lessons, real words, and a streak worth keeping.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#fff6ea",
+  "theme_color": "#ff4d1c",
+  "lang": "en",
+  "icons": [
+    { "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" },
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}
