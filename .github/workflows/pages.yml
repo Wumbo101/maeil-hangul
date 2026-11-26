@@ -1,4 +1,5 @@
 name: Deploy GitHub Pages
+# Publishes https://wumbo101.github.io/maeil-hangul/ from main.
 
 on:
   push:
