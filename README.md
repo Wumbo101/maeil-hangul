@@ -13,13 +13,15 @@ npm install
 npm run dev
 ```
 
-Open http://127.0.0.1:4731.
+Open http://127.0.0.1:4731/maeil-hangul/ . The dev server uses the same `/maeil-hangul/` base path as GitHub Pages.
 
 ```bash
 npm test
 npm run build
 npm run preview
 ```
+
+The hosted app is [https://wumbo101.github.io/maeil-hangul/](https://wumbo101.github.io/maeil-hangul/). Pushes to `main` on GitHub build and deploy it with GitHub Actions. Direct links such as `/learn` and `/streak` work because the build copies `index.html` to `404.html`, which GitHub Pages serves for unknown paths, and the client router uses that base path.
 
 `npm test` runs the streak, calendar-date, Hangul, and curriculum checks, then repeats the date and streak tests in `America/New_York` and `Asia/Seoul`.
 

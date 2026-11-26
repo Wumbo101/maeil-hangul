@@ -1,21 +1,33 @@
-const CACHE = "maeil-v1"
+const CACHE = "maeil-v2"
+const BASE = new URL("./", self.location)
+
+function scoped(path) {
+  return new URL(path, BASE).href
+}
 
 self.addEventListener("install", (event) => {
   self.skipWaiting()
-  event.waitUntil(caches.open(CACHE).then((cache) => cache.addAll(["/", "/index.html", "/manifest.webmanifest"])))
+  event.waitUntil(
+    caches.open(CACHE).then((cache) =>
+      cache.addAll([scoped("./"), scoped("index.html"), scoped("manifest.webmanifest")]),
+    ),
+  )
 })
 
 self.addEventListener("activate", (event) => {
   event.waitUntil(
-    caches.keys().then((keys) =>
-      Promise.all(keys.filter((key) => key !== CACHE).map((key) => caches.delete(key))),
-    ).then(() => self.clients.claim()),
+    caches
+      .keys()
+      .then((keys) => Promise.all(keys.filter((key) => key !== CACHE).map((key) => caches.delete(key))))
+      .then(() => self.clients.claim()),
   )
 })
 
 self.addEventListener("fetch", (event) => {
   const request = event.request
   if (request.method !== "GET") return
+  const url = new URL(request.url)
+  if (url.origin !== self.location.origin) return
   event.respondWith(
     fetch(request)
       .then((response) => {
@@ -23,6 +35,8 @@ self.addEventListener("fetch", (event) => {
         caches.open(CACHE).then((cache) => cache.put(request, copy)).catch(() => {})
         return response
       })
-      .catch(() => caches.match(request).then((cached) => cached || caches.match("/index.html"))),
+      .catch(() =>
+        caches.match(request).then((cached) => cached || caches.match(scoped("index.html"))),
+      ),
   )
 })
