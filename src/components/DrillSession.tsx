@@ -13,6 +13,7 @@ import { AudioButton } from "@/components/AudioButton"
 import { builtSyllable, type Exercise } from "@/lib/exercises"
 import { useProgress } from "@/lib/progress"
 import { playPronunciation } from "@/lib/speech"
+import { playCorrect, playWrong } from "@/lib/sfx"
 import { jamoById } from "@/data/jamo"
 
 type Item = { exercise: Exercise; misses: number; graded: boolean }
@@ -109,9 +110,11 @@ export function DrillSession({
       if (correct) {
         setFirstCorrect((value) => value + 1)
         setXp((value) => value + xpEach)
-        if (state.sound) playPronunciation(clipText(exercise))
       }
     }
+    if (correct) playCorrect()
+    else playWrong()
+    if (correct && state.sound) playPronunciation(clipText(exercise))
     setQueue((items) =>
       items.map((item, index) =>
         index === 0 ? { ...item, graded: true, misses: correct ? item.misses : item.misses + 1 } : item,
@@ -216,6 +219,7 @@ export function DrillSession({
                 type="button"
                 variant="outline"
                 data-testid="choice"
+                data-sfx="result"
                 disabled={status !== "idle"}
                 onClick={() => answerChoice(choice.id)}
                 className={[
@@ -254,7 +258,7 @@ export function DrillSession({
       ) : null}
 
       {exercise.kind === "build" && status === "idle" ? (
-        <Button type="button" className="mt-6 h-14 w-full rounded-2xl text-base font-extrabold" disabled={!buildReady} onClick={checkBuild}>
+        <Button type="button" data-sfx="result" className="mt-6 h-14 w-full rounded-2xl text-base font-extrabold" disabled={!buildReady} onClick={checkBuild}>
           Check
         </Button>
       ) : null}

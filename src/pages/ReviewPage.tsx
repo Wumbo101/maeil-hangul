@@ -7,6 +7,7 @@ import { buildReviewExercises } from "@/lib/exercises"
 import { useProgress } from "@/lib/progress"
 import { upcomingCards, type SrsCard } from "@/lib/srs"
 import { REVIEW_XP } from "@/lib/streak"
+import { playSessionEnd } from "@/lib/sfx"
 
 function describeCard(card: SrsCard): { title: string; detail: string } {
   if (card.id.startsWith("jamo:")) {
@@ -38,11 +39,11 @@ export function ReviewPage() {
         exercises={exercises}
         xpEach={REVIEW_XP}
         onExit={() => {
-          presentCelebration()
+          playSessionEnd(presentCelebration(), false)
           setPlaying(false)
         }}
         onFinish={(result) => {
-          presentCelebration()
+          playSessionEnd(presentCelebration(), true)
           setSummary(result)
           setPlaying(false)
         }}

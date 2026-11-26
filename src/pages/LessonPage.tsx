@@ -10,6 +10,7 @@ import { buildLessonExercises } from "@/lib/exercises"
 import { jamoChars } from "@/lib/hangul"
 import { DRILL_XP, LESSON_BONUS } from "@/lib/streak"
 import { useProgress } from "@/lib/progress"
+import { playSessionEnd } from "@/lib/sfx"
 
 type Phase = "intro" | "teach" | "drill" | "done"
 
@@ -50,7 +51,7 @@ export function LessonPage() {
   }
 
   function leave() {
-    presentCelebration()
+    playSessionEnd(presentCelebration(), false)
     navigate("/learn")
   }
 
@@ -61,7 +62,7 @@ export function LessonPage() {
     finishLesson(lesson.id)
     setSummary(result)
     setPhase("done")
-    presentCelebration()
+    playSessionEnd(presentCelebration(), true)
   }
 
   if (phase === "drill") {

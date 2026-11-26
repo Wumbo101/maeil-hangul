@@ -2,6 +2,7 @@ import { useEffect } from "react"
 import { BrowserRouter, Navigate, Outlet, Route, Routes, useLocation } from "react-router-dom"
 import { BottomNav } from "@/components/BottomNav"
 import { CelebrationDialog } from "@/components/CelebrationDialog"
+import { SfxRoot } from "@/components/SfxRoot"
 import { ProgressProvider, useProgress } from "@/lib/progress"
 import { HomePage } from "@/pages/HomePage"
 import { LessonPage } from "@/pages/LessonPage"
@@ -42,6 +43,7 @@ function Frame() {
 export default function App() {
   return (
     <ProgressProvider>
+      <SfxRoot />
       <BrowserRouter basename={import.meta.env.BASE_URL.replace(/\/$/, "")}>
         <Routes>
           <Route element={<Frame />}>

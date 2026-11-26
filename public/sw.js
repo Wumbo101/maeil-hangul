@@ -1,4 +1,4 @@
-const CACHE = "maeil-v3"
+const CACHE = "maeil-v4"
 const BASE = new URL("./", self.location)
 
 function scoped(path) {
@@ -18,6 +18,12 @@ async function precache() {
     scoped("404.html"),
     scoped("manifest.webmanifest"),
     scoped("audio/manifest.json"),
+    scoped("sfx/tap.wav"),
+    scoped("sfx/correct.wav"),
+    scoped("sfx/wrong.wav"),
+    scoped("sfx/lesson.wav"),
+    scoped("sfx/streak.wav"),
+    scoped("sfx/milestone.wav"),
   ]
   try {
     const response = await fetch(scoped("audio/manifest.json"))

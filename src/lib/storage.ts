@@ -6,6 +6,7 @@ export type ProgressState = {
   onboarded: boolean
   xp: number
   sound: boolean
+  effects: boolean
   completedLessonIds: string[]
   lessonAttempts: Record<string, number>
   cards: Record<string, SrsCard>
@@ -20,6 +21,7 @@ export function freshProgress(): ProgressState {
     onboarded: false,
     xp: 0,
     sound: true,
+    effects: true,
     completedLessonIds: [],
     lessonAttempts: {},
     cards: {},
@@ -39,6 +41,7 @@ export function loadProgress(): ProgressState {
       ...parsed,
       version: 1,
       sound: parsed.sound !== false,
+      effects: parsed.effects !== false,
       completedLessonIds: Array.isArray(parsed.completedLessonIds) ? parsed.completedLessonIds : [],
       lessonAttempts: parsed.lessonAttempts ?? {},
       cards: parsed.cards ?? {},

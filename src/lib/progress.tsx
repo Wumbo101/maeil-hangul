@@ -19,11 +19,12 @@ type ProgressApi = {
   celebration: Celebration | null
   onboard: () => void
   setSound: (on: boolean) => void
+  setEffects: (on: boolean) => void
   reset: () => void
   recordAnswer: (grades: Grade[], xp: number) => void
   finishLesson: (lessonId: string) => void
   dismissCelebration: () => void
-  presentCelebration: () => void
+  presentCelebration: () => Celebration | null
 }
 
 const ProgressContext = createContext<ProgressApi | null>(null)
@@ -125,6 +126,7 @@ export function ProgressProvider({ children }: { children: ReactNode }) {
     celebration,
     onboard: () => setState((prev) => ({ ...prev, onboarded: true })),
     setSound: (on) => setState((prev) => ({ ...prev, sound: on })),
+    setEffects: (on) => setState((prev) => ({ ...prev, effects: on })),
     reset: () => {
       queued.current = null
       setCelebration(null)
@@ -136,9 +138,11 @@ export function ProgressProvider({ children }: { children: ReactNode }) {
     },
     dismissCelebration: () => setCelebration(null),
     presentCelebration: () => {
-      if (!queued.current) return
-      setCelebration(queued.current)
+      const pending = queued.current
+      if (!pending) return null
       queued.current = null
+      setCelebration(pending)
+      return pending
     },
   }), [celebration, commit, state, today])
 

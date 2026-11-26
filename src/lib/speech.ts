@@ -22,8 +22,10 @@ export function playPronunciation(text: string): void {
     return
   }
   const url = `${import.meta.env.BASE_URL}audio/${clip.file}`
-  if (!player) player = new Audio()
-  else player.pause()
+  if (!player) {
+    player = new Audio()
+    player.volume = 1
+  } else player.pause()
   player.src = url
   const started = player.play()
   if (started) {

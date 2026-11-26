@@ -12,7 +12,7 @@ import {
 import { useProgress } from "@/lib/progress"
 
 export function SettingsDialog() {
-  const { state, setSound, reset } = useProgress()
+  const { state, setSound, setEffects, reset } = useProgress()
   const [confirming, setConfirming] = useState(false)
 
   return (
@@ -26,7 +26,7 @@ export function SettingsDialog() {
         <DialogHeader>
           <DialogTitle className="font-display text-2xl">Settings</DialogTitle>
           <DialogDescription>
-            Progress stays on this device. Readings use Revised Romanization. Audio uses a Korean voice when your device has one.
+            Progress stays on this device. Readings use Revised Romanization. Pronunciation plays a recording. Sound effects are quieter taps and chimes.
           </DialogDescription>
         </DialogHeader>
         <Button
@@ -35,8 +35,17 @@ export function SettingsDialog() {
           className="h-12 justify-between rounded-2xl font-extrabold"
           onClick={() => setSound(!state.sound)}
         >
-          Sound
+          Pronunciation
           <span>{state.sound ? "On" : "Off"}</span>
+        </Button>
+        <Button
+          type="button"
+          variant="secondary"
+          className="h-12 justify-between rounded-2xl font-extrabold"
+          onClick={() => setEffects(!state.effects)}
+        >
+          Sound effects
+          <span>{state.effects ? "On" : "Off"}</span>
         </Button>
         {confirming ? (
           <div className="grid gap-2">
