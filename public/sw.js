@@ -1,4 +1,4 @@
-const CACHE = "maeil-v2"
+const CACHE = "maeil-v3"
 const BASE = new URL("./", self.location)
 
 function scoped(path) {
@@ -7,12 +7,39 @@ function scoped(path) {
 
 self.addEventListener("install", (event) => {
   self.skipWaiting()
-  event.waitUntil(
-    caches.open(CACHE).then((cache) =>
-      cache.addAll([scoped("./"), scoped("index.html"), scoped("manifest.webmanifest")]),
-    ),
-  )
+  event.waitUntil(precache())
 })
+
+async function precache() {
+  const cache = await caches.open(CACHE)
+  const urls = [
+    scoped("./"),
+    scoped("index.html"),
+    scoped("404.html"),
+    scoped("manifest.webmanifest"),
+    scoped("audio/manifest.json"),
+  ]
+  try {
+    const response = await fetch(scoped("audio/manifest.json"))
+    if (response.ok) {
+      const manifest = await response.json()
+      const files = new Set(Object.values(manifest).map((entry) => entry.file || entry))
+      for (const file of files) urls.push(scoped(`audio/${file}`))
+    }
+  } catch {
+    // The page still works online if precache of the manifest fails.
+  }
+  await Promise.all(
+    urls.map(async (url) => {
+      try {
+        const response = await fetch(url)
+        if (response.ok) await cache.put(url, response)
+      } catch {
+        // Skip a single missing file instead of aborting the update.
+      }
+    }),
+  )
+}
 
 self.addEventListener("activate", (event) => {
   event.waitUntil(
@@ -23,6 +50,10 @@ self.addEventListener("activate", (event) => {
   )
 })
 
+self.addEventListener("message", (event) => {
+  if (event.data === "skip-waiting") self.skipWaiting()
+})
+
 self.addEventListener("fetch", (event) => {
   const request = event.request
   if (request.method !== "GET") return
@@ -31,12 +62,12 @@ self.addEventListener("fetch", (event) => {
   event.respondWith(
     fetch(request)
       .then((response) => {
-        const copy = response.clone()
-        caches.open(CACHE).then((cache) => cache.put(request, copy)).catch(() => {})
+        if (response.ok) {
+          const copy = response.clone()
+          caches.open(CACHE).then((cache) => cache.put(request, copy)).catch(() => {})
+        }
         return response
       })
-      .catch(() =>
-        caches.match(request).then((cached) => cached || caches.match(scoped("index.html"))),
-      ),
+      .catch(() => caches.match(request).then((cached) => cached || caches.match(scoped("index.html")))),
   )
 })

@@ -2,7 +2,7 @@
 
 A small daily app for learning to read Hangul. Short lessons take you from the basic vowels through consonants, syllable blocks, compound vowels, batchim, and real words. A streak sits in the middle: finish one lesson or earn 20 XP each day, or the flame goes out.
 
-Readings use Revised Romanization. Every word is shown with its English meaning. Audio uses the Web Speech API with a `ko-KR` voice when the device has one, and the speaker button stays hidden when speech isn’t available.
+Readings use Revised Romanization. Every word is shown with its English meaning. The speaker button plays a bundled Korean recording (letters as their sound, words read naturally). The device’s Korean voice is only a fallback.
 
 Progress is stored in `localStorage` on this device (`maeil-progress-v1`). There is no account. Days follow the clock on the device, not UTC.
 

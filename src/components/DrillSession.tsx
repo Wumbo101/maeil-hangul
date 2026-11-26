@@ -12,9 +12,22 @@ import { Progress } from "@/components/ui/progress"
 import { AudioButton } from "@/components/AudioButton"
 import { builtSyllable, type Exercise } from "@/lib/exercises"
 import { useProgress } from "@/lib/progress"
-import { speakKorean } from "@/lib/speech"
+import { playPronunciation } from "@/lib/speech"
+import { jamoById } from "@/data/jamo"
 
 type Item = { exercise: Exercise; misses: number; graded: boolean }
+
+function clipText(exercise: Exercise): string {
+  if (exercise.character) return exercise.character
+  if (exercise.answerId) {
+    try {
+      return jamoById(exercise.answerId).char
+    } catch {
+      return ""
+    }
+  }
+  return ""
+}
 
 function emptySlots(exercise: Exercise | undefined) {
   const only = exercise?.build?.initialChoices.length === 1 ? exercise.build.initialChoices[0] : ""
@@ -96,7 +109,7 @@ export function DrillSession({
       if (correct) {
         setFirstCorrect((value) => value + 1)
         setXp((value) => value + xpEach)
-        if (state.sound) speakKorean(exercise.character ?? exercise.romanization ?? "")
+        if (state.sound) playPronunciation(clipText(exercise))
       }
     }
     setQueue((items) =>
